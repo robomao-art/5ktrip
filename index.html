@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5K DEATHMATCH 💀</title>
+<link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#ff2244;--yellow:#ffd700;--blue:#0066ff;--green:#00e676;
+  --orange:#ff9500;--purple:#9c27b0;--teal:#00bcd4;
+  --bg:#0a0a0a;--card:#1a1008;--card2:#221508;
+  --gold:#ffd700;--gold2:#ffb700;--neon:#ff2244;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:radial-gradient(ellipse at center top,#1a0800 0%,#0a0a0a 100%);color:#fff;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(255,20,60,.08) 0, transparent 60%),
+    radial-gradient(ellipse at 80% 50%, rgba(255,180,0,.06) 0, transparent 60%),
+    radial-gradient(ellipse at 50% 0%, rgba(255,100,0,.05) 0, transparent 50%);
+}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    radial-gradient(1px 1px at 5% 15%,rgba(255,215,0,.6) 0,transparent 100%),
+    radial-gradient(1px 1px at 15% 75%,rgba(255,215,0,.4) 0,transparent 100%),
+    radial-gradient(1px 1px at 25% 35%,rgba(255,50,80,.5) 0,transparent 100%),
+    radial-gradient(1px 1px at 40% 90%,rgba(255,215,0,.3) 0,transparent 100%),
+    radial-gradient(1px 1px at 55% 20%,rgba(255,50,80,.4) 0,transparent 100%),
+    radial-gradient(1px 1px at 65% 60%,rgba(255,215,0,.5) 0,transparent 100%),
+    radial-gradient(1px 1px at 75% 40%,rgba(255,50,80,.3) 0,transparent 100%),
+    radial-gradient(1px 1px at 85% 80%,rgba(255,215,0,.4) 0,transparent 100%),
+    radial-gradient(2px 2px at 10% 50%,rgba(255,215,0,.3) 0,transparent 100%),
+    radial-gradient(2px 2px at 90% 20%,rgba(255,50,80,.3) 0,transparent 100%),
+    radial-gradient(2px 2px at 50% 70%,rgba(255,215,0,.25) 0,transparent 100%);
+}
+.app{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:16px 14px 80px;}
+
+/* HEADER */
+header{text-align:center;padding:24px 0 8px;}
+header h1{font-family:'Boogaloo',cursive;font-size:clamp(2.2rem,7vw,4.5rem);
+  background:linear-gradient(135deg,#ffffff,#ffd700,#ff6600,#ff0022);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 30px rgba(255,215,0,.8));letter-spacing:4px;
+  animation:titleglow 2s ease-in-out infinite alternate;}
+#saveStatus{font-size:.72rem;color:rgba(255,255,255,.32);text-align:center;margin-top:3px;height:14px;}
+
+/* STEP INDICATOR */
+.steps{display:flex;align-items:center;margin:18px 0 0;overflow-x:auto;padding-bottom:4px;}
+.step{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:54px;cursor:pointer;opacity:.35;transition:opacity .2s;}
+.step.active{opacity:1;}
+.step.done{opacity:.65;}
+.step-circle{width:32px;height:32px;border-radius:50%;border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:900;font-family:'Boogaloo',cursive;transition:all .2s;}
+.step.active .step-circle{border-color:var(--gold);background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a0a2e;box-shadow:0 0 16px rgba(255,215,0,.7),0 0 32px rgba(255,215,0,.3);}
+.step.done .step-circle{border-color:var(--green);background:rgba(6,214,160,.15);color:var(--green);}
+.step-label{font-size:.62rem;font-weight:700;text-align:center;color:rgba(255,255,255,.6);max-width:52px;line-height:1.2;}
+.step-line{flex:1;height:2px;background:rgba(255,255,255,.1);min-width:16px;}
+.step-line.done{background:rgba(6,214,160,.4);}
+
+/* PANELS */
+.panel{display:none;}.panel.active{display:block;}
+
+/* CARDS */
+.card{background:linear-gradient(145deg,#1c1000,#120a00);border-radius:18px;padding:18px;margin-top:14px;border:1px solid rgba(255,215,0,.2);box-shadow:0 4px 24px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,215,0,.1);}
+.card h2{font-family:'Boogaloo',cursive;font-size:1.4rem;color:var(--gold);margin-bottom:11px;display:flex;align-items:center;gap:7px;text-shadow:0 0 20px rgba(255,215,0,.4);}
+.card h2.green{color:var(--green);}.card h2.teal{color:var(--teal);}.card h2.red{color:var(--red);}
+.subtext{font-size:.8rem;color:rgba(255,255,255,.38);margin-bottom:11px;line-height:1.4;}
+
+/* INPUTS */
+.irow{display:flex;gap:8px;margin-bottom:11px;align-items:center;flex-wrap:wrap;}
+input[type=text],input[type=number]{flex:1;min-width:90px;padding:9px 12px;border-radius:11px;border:1px solid rgba(255,215,0,.2);background:rgba(255,215,0,.04);color:#fff;font-family:'Nunito',sans-serif;font-size:.9rem;}
+input::placeholder{color:rgba(255,255,255,.26);}input:focus{outline:none;border-color:var(--yellow);}
+.si{width:62px;min-width:62px;flex:none;text-align:center;padding:7px 4px;}
+.si.wide{width:200px;min-width:120px;flex:none;}
+
+/* BUTTONS */
+.btn{padding:9px 16px;border:none;border-radius:11px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;transition:transform .15s,opacity .15s;}
+.btn:hover{transform:scale(1.03);opacity:.92;}.btn:active{transform:scale(.97);}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none !important;}
+.by{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0a0a0a;box-shadow:0 0 10px rgba(255,215,0,.3);}.bg{background:var(--green);color:#1a0a2e;}
+.bb{background:var(--blue);color:#fff;}.bp{background:var(--purple);color:#fff;}
+.br{background:var(--red);color:#fff;}.bt{background:var(--teal);color:#1a0a2e;}
+.bspin{background:linear-gradient(135deg,#ffd700,#ff9500,#ff2244);color:#fff;padding:13px 32px;border-radius:50px;font-family:'Boogaloo',cursive;font-size:1.3rem;letter-spacing:2px;box-shadow:0 0 24px rgba(255,50,80,.6),0 0 48px rgba(255,215,0,.3);text-shadow:0 1px 3px rgba(0,0,0,.5);border:1px solid rgba(255,215,0,.4);}
+.act{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center;}
+
+/* TABLES */
+table{width:100%;border-collapse:collapse;margin-top:7px;}
+th{text-align:left;padding:6px 8px;font-size:.72rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid rgba(255,255,255,.07);}
+td{padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+.nc{font-weight:700;font-size:.9rem;}
+.rb{background:none;border:none;color:rgba(255,255,255,.2);cursor:pointer;font-size:1rem;padding:3px;transition:color .2s;}
+.rb:hover{color:var(--red);}
+.elim-row td{opacity:.3;}
+.elim-badge{font-size:.62rem;background:rgba(230,57,70,.25);color:var(--red);border-radius:6px;padding:1px 5px;margin-left:4px;vertical-align:middle;}
+
+/* BETTING PANEL */
+.odds-live{background:linear-gradient(145deg,#1f1000,#150b00);border-radius:14px;padding:14px;margin-bottom:12px;border:1px solid rgba(255,215,0,.15);}
+.odds-live h3{font-family:'Boogaloo',cursive;font-size:1.1rem;color:var(--teal);margin-bottom:10px;}
+.odds-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.odds-row:last-child{border-bottom:none;}
+.odds-name{flex:1;font-weight:700;font-size:.88rem;}
+.odds-val{font-family:'Boogaloo',cursive;font-size:1.3rem;color:var(--yellow);min-width:52px;text-align:right;}
+.odds-bar-w{flex:2;background:rgba(255,255,255,.07);border-radius:999px;height:6px;overflow:hidden;}
+.odds-bar{height:100%;border-radius:999px;transition:width .4s ease;}
+.pot-total{text-align:center;font-size:.82rem;color:rgba(255,255,255,.45);margin-top:8px;}
+
+.bet-result-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.bet-result-row:last-child{border-bottom:none;}
+.br-name{flex:1;font-weight:700;}
+.br-bet{min-width:50px;text-align:right;color:rgba(255,255,255,.5);font-size:.82rem;}
+.br-payout{min-width:70px;text-align:right;font-weight:900;font-size:1rem;}
+.br-profit{min-width:60px;text-align:right;font-size:.8rem;}
+.win-row{background:rgba(255,209,102,.07);border-radius:10px;padding:4px 6px;}
+
+/* WHEEL MODAL */
+.modal{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.93);backdrop-filter:blur(8px);align-items:flex-start;justify-content:center;overflow-y:auto;padding:12px 0;}
+.modal.open{display:flex;}
+.mbox{background:linear-gradient(145deg,#1c1000,#0f0800);border-radius:22px;padding:18px 20px 24px;border:1px solid rgba(255,215,0,.25);max-width:460px;width:95%;text-align:center;margin:auto;position:relative;box-shadow:0 0 60px rgba(255,100,0,.2),0 0 120px rgba(0,0,0,.8);}
+.mclose{position:absolute;top:11px;right:13px;background:none;border:none;color:rgba(255,255,255,.33);font-size:1.2rem;cursor:pointer;}
+.mclose:hover{color:#fff;}
+.mtitle{font-family:'Boogaloo',cursive;font-size:1.5rem;color:var(--yellow);margin-bottom:2px;}
+.msub{color:rgba(255,255,255,.4);font-size:.78rem;margin-bottom:11px;min-height:16px;}
+.ww{position:relative;display:inline-block;}
+.ptr{position:absolute;top:50%;right:-21px;transform:translateY(-50%);width:0;height:0;border-top:14px solid transparent;border-bottom:14px solid transparent;border-right:28px solid var(--yellow);filter:drop-shadow(0 0 8px rgba(255,209,102,.9));z-index:10;}
+.wcenter{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:28px;height:28px;border-radius:50%;background:var(--card);border:3px solid var(--yellow);z-index:5;box-shadow:0 0 10px rgba(255,209,102,.5);}
+#wheelCanvas{border-radius:50%;box-shadow:0 0 40px rgba(255,209,102,.18),0 0 80px rgba(0,0,0,.6);display:block;}
+.winner-banner{font-family:'Boogaloo',cursive;font-size:1.7rem;color:var(--gold);min-height:48px;margin:10px 0 3px;filter:drop-shadow(0 0 20px rgba(255,215,0,.9)) drop-shadow(0 0 40px rgba(255,50,80,.5));animation:winnerpulse 1.5s ease-in-out infinite alternate;}
+.plist{display:flex;flex-wrap:wrap;gap:5px;margin:5px 0;justify-content:center;}
+.ptag{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:18px;font-size:.76rem;font-weight:700;}
+.ptag.safe{background:rgba(6,214,160,.18);color:var(--green);border:1px solid rgba(6,214,160,.28);}
+.ptag.out{background:rgba(230,57,70,.18);color:var(--red);border:1px solid rgba(230,57,70,.28);text-decoration:line-through;opacity:.65;}
+.legend-wrap{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin:8px 0;}
+.li{display:flex;align-items:center;gap:4px;font-size:.72rem;color:rgba(255,255,255,.6);}
+.ld{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+
+/* Final wheel */
+.fw-wrap{display:flex;flex-direction:column;align-items:center;padding:8px 0 24px;}
+.fw-ww{position:relative;display:inline-block;margin:14px 0 8px;}
+.fw-ptr{position:absolute;top:50%;right:-24px;transform:translateY(-50%);width:0;height:0;border-top:17px solid transparent;border-bottom:17px solid transparent;border-right:34px solid var(--yellow);filter:drop-shadow(0 0 10px rgba(255,209,102,.9));z-index:10;}
+.fw-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:36px;height:36px;border-radius:50%;background:#1a0a2e;border:4px solid var(--yellow);z-index:5;box-shadow:0 0 14px rgba(255,209,102,.6);}
+#fwCanvas{border-radius:50%;box-shadow:0 0 50px rgba(255,209,102,.2),0 0 90px rgba(0,0,0,.6);}
+
+.confetti-c{position:fixed;top:0;left:0;right:0;pointer-events:none;z-index:999;overflow:hidden;height:100vh;}
+.cp{position:absolute;top:-12px;animation:cfall linear forwards;}
+@keyframes cfall{to{transform:translateY(110vh) rotate(720deg);opacity:0;}}
+@keyframes winnerpulse{from{filter:drop-shadow(0 0 15px rgba(255,215,0,.8));} to{filter:drop-shadow(0 0 30px rgba(255,215,0,1)) drop-shadow(0 0 50px rgba(255,80,0,.6));}}
+.pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.07);border-radius:18px;padding:4px 11px;font-size:.76rem;color:rgba(255,255,255,.45);}
+
+.nav-hint{font-size:.75rem;color:rgba(255,255,255,.28);text-align:center;margin-top:8px;}
+
+@media(max-width:480px){
+  #wheelCanvas{width:260px!important;height:260px!important;}
+  #fwCanvas{width:290px!important;height:290px!important;}
+  .bspin{font-size:1rem;padding:11px 22px;}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div style="font-size:.72rem;letter-spacing:4px;color:rgba(255,50,50,.6);text-transform:uppercase;margin-bottom:6px;">☠ ☠ ☠ &nbsp; ENTER IF YOU DARE &nbsp; ☠ ☠ ☠</div>
+  <div id="mainLogo" style="margin:0 auto 4px;"><svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg" style="width:min(280px,80vw);display:block;margin:0 auto;filter:drop-shadow(0 0 18px rgba(255,30,30,.8)) drop-shadow(0 0 40px rgba(255,215,0,.4));"><line x1="18" y1="95" x2="58" y2="55" stroke="#cc2200" stroke-width="7" stroke-linecap="round"/><circle cx="14" cy="99" r="7" fill="#cc2200"/><circle cx="22" cy="91" r="5" fill="#cc2200"/><circle cx="54" cy="51" r="7" fill="#cc2200"/><circle cx="62" cy="59" r="5" fill="#cc2200"/><line x1="182" y1="95" x2="142" y2="55" stroke="#cc2200" stroke-width="7" stroke-linecap="round"/><circle cx="186" cy="99" r="7" fill="#cc2200"/><circle cx="178" cy="91" r="5" fill="#cc2200"/><circle cx="146" cy="51" r="7" fill="#cc2200"/><circle cx="138" cy="59" r="5" fill="#cc2200"/><ellipse cx="100" cy="52" rx="38" ry="36" fill="#1a0a00" stroke="#ffd700" stroke-width="2.5"/><ellipse cx="90" cy="40" rx="14" ry="10" fill="rgba(255,215,0,.06)"/><ellipse cx="87" cy="50" rx="9" ry="10" fill="#ff1122"/><ellipse cx="113" cy="50" rx="9" ry="10" fill="#ff1122"/><ellipse cx="87" cy="50" rx="5" ry="6" fill="#ff4444"/><ellipse cx="113" cy="50" rx="5" ry="6" fill="#ff4444"/><ellipse cx="87" cy="49" rx="2" ry="2.5" fill="#fff"/><ellipse cx="113" cy="49" rx="2" ry="2.5" fill="#fff"/><path d="M97 62 L100 68 L103 62 Z" fill="#0a0500"/><rect x="82" y="76" width="8" height="11" rx="2" fill="#ffd700" stroke="#cc9900" stroke-width="1"/><rect x="92" y="76" width="8" height="13" rx="2" fill="#ffd700" stroke="#cc9900" stroke-width="1"/><rect x="102" y="76" width="8" height="11" rx="2" fill="#ffd700" stroke="#cc9900" stroke-width="1"/><rect x="112" y="76" width="6" height="9" rx="2" fill="#ffd700" stroke="#cc9900" stroke-width="1"/><rect x="76" y="76" width="6" height="9" rx="2" fill="#ffd700" stroke="#cc9900" stroke-width="1"/><path d="M65 72 Q100 90 135 72" stroke="#ffd700" stroke-width="2" fill="none"/><path d="M68 28 L72 10 L82 22 L100 8 L118 22 L128 10 L132 28 Z" fill="#ffd700" stroke="#ff9500" stroke-width="1.5"/><circle cx="100" cy="10" r="4" fill="#ff2244"/><circle cx="82" cy="22" r="3" fill="#ff2244"/><circle cx="118" cy="22" r="3" fill="#ff2244"/><rect x="24" y="30" width="22" height="22" rx="4" fill="#1a0a00" stroke="#ffd700" stroke-width="1.5" transform="rotate(-15 35 41)"/><circle cx="30" cy="37" r="2.5" fill="#ffd700" transform="rotate(-15 35 41)"/><circle cx="40" cy="37" r="2.5" fill="#ffd700" transform="rotate(-15 35 41)"/><circle cx="30" cy="45" r="2.5" fill="#ffd700" transform="rotate(-15 35 41)"/><circle cx="40" cy="45" r="2.5" fill="#ffd700" transform="rotate(-15 35 41)"/><rect x="154" y="30" width="22" height="22" rx="4" fill="#1a0a00" stroke="#ffd700" stroke-width="1.5" transform="rotate(15 165 41)"/><circle cx="162" cy="38" r="2.5" fill="#ffd700"/><circle cx="172" cy="38" r="2.5" fill="#ffd700"/><circle cx="167" cy="44" r="2.5" fill="#ffd700"/></svg></div>
+  <h1>💀 5K DEATHMATCH</h1>
+  <div style="font-size:.75rem;letter-spacing:3px;color:rgba(255,50,50,.5);text-transform:uppercase;margin-top:2px;">☠ &nbsp; Las Vegas Edition &nbsp; ☠</div>
+  <div id="saveStatus" style="margin-top:6px;font-size:.72rem;color:rgba(255,80,80,.4);">Laddar...</div>
+</header>
+
+<!-- STEP INDICATOR -->
+<div class="steps" id="stepIndicator"></div>
+
+<!-- ═══════════════════════════════════════════
+     PANEL 0: SETUP (spelare + deltävlingar)
+═══════════════════════════════════════════ -->
+<div class="panel" id="panel-setup">
+  <div class="card">
+    <h2>👥 Deltagare</h2>
+    <div class="irow">
+      <input type="text" id="newName" placeholder="Skriv ett namn..." onkeydown="if(event.key==='Enter')addP()">
+      <button class="btn by" onclick="addP()">+ Lägg till</button>
+    </div>
+    <table><thead><tr><th>Namn</th><th>Saldo</th><th></th></tr></thead>
+      <tbody id="pList"></tbody>
+    </table>
+    <p class="subtext" style="margin-top:8px">Saldo byggs upp av bettingvinster. Max 300 kr per deltävling.</p>
+  </div>
+
+  <div class="card" style="margin-top:12px;">
+    <h2>🏁 Deltävlingar</h2>
+    <div class="irow">
+      <label style="font-size:.88rem;color:rgba(255,255,255,.6);">Antal:</label>
+      <input type="number" class="si" id="numRounds" min="1" max="20" value="4" oninput="changeNumRounds()">
+    </div>
+    <div id="roundNameList"></div>
+  </div>
+
+  <div class="card" style="margin-top:12px;">
+    <h2 class="teal">💾 Spara & Dela</h2>
+    <div class="act">
+      <button class="btn bt" onclick="exportData()">⬇ Exportera</button>
+      <button class="btn bb" onclick="document.getElementById('importFile').click()">⬆ Importera</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+      <button class="btn br" onclick="resetAll()">🗑 Återställ</button>
+    </div>
+  </div>
+
+  <div class="act" style="justify-content:flex-end;margin-top:14px;">
+    <button class="btn bg" onclick="startFlow()">Starta tävlingen! →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PANEL: BETTING (en per deltävling)
+═══════════════════════════════════════════ -->
+<div class="panel" id="panel-betting">
+  <div class="card">
+    <h2>🎰 Betting — <span id="bettingRoundName"></span></h2>
+    <p class="subtext">Varje spelare satsar <strong style="color:var(--yellow)">max 300 kr</strong> per deltävling. Odds räknas med pari-mutuel (travmodellen) — mer pengar på en spelare = lägre odds. Vinsten läggs till ditt löpande saldo.</p>
+
+    <div class="odds-live" id="oddsLive">
+      <h3>📊 Live-odds</h3>
+      <div id="oddsRows"></div>
+      <div class="pot-total" id="potTotal">Total pott: 0 kr</div>
+      <div id="jackpotInBetting" style="display:none;font-size:.82rem;color:var(--yellow);text-align:center;margin-top:4px;font-weight:700;"></div>
+    </div>
+
+    <table>
+      <thead><tr><th>Spelare satsar</th><th>På vem?</th><th>Insats (max 300 kr)</th></tr></thead>
+      <tbody id="bettingRows"></tbody>
+    </table>
+  </div>
+
+  <div class="act" style="justify-content:flex-end;margin-top:14px;">
+    <button class="btn bp" onclick="goToScores()">Gå till deltävlingen →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PANEL: SCORES (en per deltävling)
+═══════════════════════════════════════════ -->
+<div class="panel" id="panel-scores">
+  <div class="card">
+    <h2>📝 Resultat — <span id="scoresRoundName"></span></h2>
+    <p class="subtext">Ange poäng eller placering. <strong style="color:var(--red)">Sämst poäng = flest platser på hjulet.</strong></p>
+    <table>
+      <thead><tr><th>Spelare</th><th>Poäng / Placering</th></tr></thead>
+      <tbody id="scoresRows"></tbody>
+    </table>
+
+    <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.07);">
+      <div class="irow">
+        <label style="font-size:.88rem;font-weight:700;">Hur många åker ut?</label>
+        <input type="number" class="si" id="elimCount" min="0" value="1">
+      </div>
+      <p id="elimInfo" style="font-size:.76rem;color:rgba(255,255,255,.35);margin-top:4px;"></p>
+    </div>
+  </div>
+  <div class="act" style="justify-content:flex-end;margin-top:14px;">
+    <button class="btn bp" id="openWheelBtn" onclick="openWheelModal()">🎡 Starta hjulet!</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PANEL: BET RESULTS (efter varje hjul)
+═══════════════════════════════════════════ -->
+<div class="panel" id="panel-betresults">
+  <div class="card">
+    <h2 class="green">💰 Bettingresultat — <span id="betResRoundName"></span></h2>
+    <p class="subtext" id="betResDesc"></p>
+    <div id="betResTable"></div>
+    <div id="balanceTable" style="margin-top:16px;padding-top:12px;border-top:1px solid rgba(255,255,255,.07);"><div id="jackpotBanner" style="display:none"></div>
+      <h3 style="font-family:'Boogaloo',cursive;color:var(--teal);font-size:1.1rem;margin-bottom:8px;">💳 Nuvarande saldo</h3>
+      <div id="balanceRows"></div>
+    </div>
+  </div>
+  <div class="act" style="justify-content:flex-end;margin-top:14px;">
+    <button class="btn bg" id="nextRoundBtn" onclick="nextRound()">Nästa deltävling →</button>
+    <button class="btn by" id="goFinalBtn" style="display:none" onclick="goFinal()">Gå till finalen! 🎡</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PANEL: FINAL WHEEL
+═══════════════════════════════════════════ -->
+<div class="panel" id="panel-final">
+  <div class="card" style="text-align:center;padding:12px 16px;">
+    <p style="font-size:.82rem;color:rgba(255,255,255,.45)">🔀 Segmenten är slumpmässigt utplacerade · Sämst total = flest chanser</p>
+  </div>
+  <div class="fw-wrap">
+    <div class="fw-ww">
+      <canvas id="fwCanvas" width="400" height="400"></canvas>
+      <div class="fw-center"></div>
+      <div class="fw-ptr"></div>
+    </div>
+    <div class="legend-wrap" id="fwLegend"></div>
+    <div id="fwWinner" style="font-family:'Boogaloo',cursive;font-size:2rem;color:var(--yellow);min-height:56px;margin:10px 0 4px;filter:drop-shadow(0 0 12px rgba(255,209,102,.7));text-align:center;"></div>
+    <button class="btn bspin" id="fwSpinBtn" onclick="spinFinal()">🎡 SNURRA FINALHJULET!</button>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<!-- WHEEL MODAL -->
+<div class="modal" id="wheelModal">
+  <div class="mbox">
+    <button class="mclose" onclick="closeWheelModal()">✕</button>
+    <div class="mtitle" id="mTitle">🎡</div>
+    <div class="msub" id="mSub"></div>
+    <div class="ww">
+      <canvas id="wheelCanvas" width="290" height="290"></canvas>
+      <div class="wcenter"></div>
+      <div class="ptr"></div>
+    </div>
+    <div id="mWinner" class="winner-banner"></div>
+    <div id="mSavedWrap" style="display:none;margin-bottom:6px;">
+      <div style="font-size:.72rem;color:rgba(255,255,255,.36);margin-bottom:3px;">✅ Räddade</div>
+      <div class="plist" id="mSaved"></div>
+    </div>
+    <div id="mOutWrap" style="display:none;margin-bottom:10px;">
+      <div style="font-size:.72rem;color:rgba(255,255,255,.36);margin-bottom:3px;">💀 Utslagna</div>
+      <div class="plist" id="mOut"></div>
+    </div>
+    <div class="legend-wrap" id="mLegend"></div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:9px;">
+      <button class="btn bspin" id="mSpinBtn" onclick="spinModal()" style="font-size:1rem;padding:11px 24px;">🎡 Snurra!</button>
+      <button class="btn bb" id="mNextBtn" onclick="nextModalSpin()" style="display:none">Snurra igen →</button>
+      <button class="btn by" id="mDoneBtn" onclick="finishRoundAndClose()" style="display:none">Bekräfta & Stäng ✓</button>
+    </div>
+  </div>
+</div>
+
+<div class="confetti-c" id="confetti"></div>
+
+<script>
+
+// VEGAS AVATARS
+const VEGAS_AVATARS=[
+  {emoji:'🎩',label:'High Roller',bg:'#1a0a3a'},
+  {emoji:'🃏',label:'Dealer',bg:'#0a1a0a'},
+  {emoji:'💃',label:'Showgirl',bg:'#3a0a1a'},
+  {emoji:'🤠',label:'Cowboy',bg:'#2a1500'},
+  {emoji:'🕵️',label:'Mystery Man',bg:'#0a0a2a'},
+  {emoji:'🧙',label:'Magician',bg:'#1a003a'},
+  {emoji:'👑',label:'VIP',bg:'#2a1a00'},
+  {emoji:'🦅',label:'Eagle Eye',bg:'#002a1a'},
+  {emoji:'🎭',label:'Joker',bg:'#2a002a'},
+  {emoji:'🍸',label:'Bartender',bg:'#001a2a'},
+  {emoji:'🔮',label:'Fortune Teller',bg:'#1a0a2a'},
+  {emoji:'🎸',label:'Rockstar',bg:'#2a0a00'},
+  {emoji:'🏆',label:'Champion',bg:'#1a1200'},
+  {emoji:'💣',label:'Wild Card',bg:'#2a0000'},
+  {emoji:'🌟',label:'Star',bg:'#0a1a00'},
+  {emoji:'🎲',label:'Dice Master',bg:'#0a0a1a'},
+];
+function getAvatar(i){return VEGAS_AVATARS[i%VEGAS_AVATARS.length];}
+function avatarHTML(idx,size){
+  size=size||36;
+  const av=getAvatar(idx);
+  return '<span style="display:inline-flex;align-items:center;justify-content:center;width:'+size+'px;height:'+size+'px;border-radius:50%;background:'+av.bg+';border:2px solid rgba(255,215,0,.35);font-size:'+Math.round(size*.55)+'px;flex-shrink:0;box-shadow:0 0 8px rgba(255,215,0,.2);" title="'+av.label+'">'+av.emoji+'</span>';
+}
+// ════════════════════════════════════════════════
+//  CONSTANTS & STATE
+// ════════════════════════════════════════════════
+const COLORS=['#e63946','#ffd166','#06d6a0','#118ab2','#f4a261','#7b2d8b','#ef476f','#26c6da','#ff6b35','#a8dadc','#457b9d','#e9c46a','#2a9d8f','#e76f51','#f77f00','#8338ec'];
+const STORAGE_KEY='teamTivoliV3';
+const DEFAULT_CAPITAL=0;  // Saldo börjar på 0, byggs upp av vinster
+const BET_LIMIT=300;       // Max insats per deltävling
+
+let S={ // main state
+  participants:[],    // {name, colorIdx, capital}
+  numRounds:4,
+  roundNames:['Deltävling 1','Deltävling 2','Deltävling 3','Deltävling 4'],
+  scores:{},          // "pi_ri" -> number|null
+  roundElim:{},       // ri -> [name,...]
+  bets:{},            // "ri_bettorName" -> {on:name, amount:number}
+  betResults:{},      // ri -> {winner:name, payouts:{name->number}}
+  jackpot:0,          // Accumulated jackpot when no one picks winner
+  flowStep:'setup',   // 'setup' | 'betting_R' | 'scores_R' | 'betresults_R' | 'final'
+  currentRound:0,
+};
+
+// ════════════════════════════════════════════════
+//  PERSISTENCE
+// ════════════════════════════════════════════════
+function save(){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(S));setSS('✓ Autosparad '+new Date().toLocaleTimeString('sv-SE',{hour:'2-digit',minute:'2-digit'}));}
+  catch(e){setSS('⚠ Kunde inte spara');}
+}
+function load(){
+  try{const r=localStorage.getItem(STORAGE_KEY);if(r){S=JSON.parse(r);setSS('✓ Session inladdad');}else setSS('Ny session');}
+  catch(e){setSS('Ny session');}
+}
+function setSS(m){document.getElementById('saveStatus').textContent=m;}
+function exportData(){
+  const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);
+  a.download=`teamtivoli_${new Date().toISOString().slice(0,10)}.json`;a.click();setSS('⬇ Exporterad!');
+}
+function importData(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{try{S=JSON.parse(ev.target.result);save();renderAll();}catch{alert('Ogiltigt filformat.');}};
+  r.readAsText(f);e.target.value='';
+}
+function resetAll(){
+  if(!confirm('Återställ ALL data?'))return;
+  S={participants:[],numRounds:4,roundNames:['Deltävling 1','Deltävling 2','Deltävling 3','Deltävling 4'],scores:{},roundElim:{},bets:{},betResults:{},flowStep:'setup',currentRound:0,jackpot:0};
+  save();renderAll();
+}
+
+// ════════════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════════════
+function color(i){return COLORS[i%COLORS.length];}
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function getRN(ri){return S.roundNames[ri]||`Deltävling ${ri+1}`;}
+function getScore(pi,ri){const v=S.scores[`${pi}_${ri}`];return(v===undefined||v===null)?null:v;}
+function setScoreVal(pi,ri,v){S.scores[`${pi}_${ri}`]=v===''?null:parseFloat(v);save();updateElimInfo();}
+
+function eliminatedBefore(ri){
+  const s=new Set();
+  for(let r=0;r<ri;r++)(S.roundElim[r]||[]).forEach(n=>s.add(n));
+  return s;
+}
+function activePlayers(ri){
+  const elim=eliminatedBefore(ri);
+  return S.participants.filter(p=>!elim.has(p.name));
+}
+function allElimNames(){
+  const s=new Set();Object.values(S.roundElim).forEach(a=>a.forEach(n=>s.add(n)));return s;
+}
+
+// ════════════════════════════════════════════════
+//  SETUP PANEL
+// ════════════════════════════════════════════════
+function addP(){
+  const inp=document.getElementById('newName');
+  const n=inp.value.trim();if(!n)return;
+  if(S.participants.find(p=>p.name.toLowerCase()===n.toLowerCase())){alert('Namn finns redan!');return;}
+  S.participants.push({name:n,colorIdx:S.participants.length,capital:DEFAULT_CAPITAL});
+  inp.value='';save();renderSetup();
+}
+function removeP(i){
+  const name=S.participants[i].name;
+  S.participants.splice(i,1);
+  // Clean scores
+  Object.keys(S.scores).forEach(k=>{if(k.startsWith(`${i}_`))delete S.scores[k];});
+  Object.keys(S.roundElim).forEach(r=>{S.roundElim[r]=S.roundElim[r].filter(n=>n!==name);});
+  save();renderSetup();
+}
+// Capital is managed automatically via betting
+
+function renderSetup(){
+  const tb=document.getElementById('pList');
+  const elim=allElimNames();
+  if(!S.participants.length){tb.innerHTML='<tr><td colspan="3" style="text-align:center;padding:18px;color:rgba(255,255,255,.28)">Inga deltagare ännu.</td></tr>';return;}
+  tb.innerHTML=S.participants.map((p,i)=>{
+    const isE=elim.has(p.name);
+    return`<tr${isE?' class="elim-row"':''}>
+      <td class="nc">${avatarHTML(p.colorIdx,30)} ${p.name}${isE?'<span class="elim-badge">utslagen</span>':''}</td>
+      <td style="font-family:'Boogaloo',cursive;font-size:1.1rem;color:var(--yellow)">${p.capital||0} kr</td>
+      <td><button class="rb" onclick="removeP(${i})">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function changeNumRounds(){
+  const n=Math.max(1,Math.min(20,parseInt(document.getElementById('numRounds').value)||4));
+  S.numRounds=n;
+  while(S.roundNames.length<n)S.roundNames.push(`Deltävling ${S.roundNames.length+1}`);
+  save();renderRoundNames();
+}
+function renderRoundNames(){
+  document.getElementById('roundNameList').innerHTML=
+    '<table><tbody>'+
+    Array.from({length:S.numRounds},(_,ri)=>`<tr>
+      <td style="color:rgba(255,255,255,.34);width:24px">${ri+1}</td>
+      <td><input class="si wide" value="${S.roundNames[ri]||`Deltävling ${ri+1}`}" oninput="S.roundNames[${ri}]=this.value;save();renderSteps()"></td>
+      <td style="font-size:.72rem;color:rgba(255,255,255,.32);padding-left:8px">${(S.roundElim[ri]||[]).length?'💀 '+(S.roundElim[ri]||[]).join(', '):''}</td>
+    </tr>`).join('')+
+    '</tbody></table>';
+}
+
+// ════════════════════════════════════════════════
+//  FLOW CONTROL
+// ════════════════════════════════════════════════
+const PANELS=['setup','betting','scores','betresults','final'];
+
+function showPanel(id){
+  PANELS.forEach(p=>{
+    const el=document.getElementById('panel-'+p);
+    if(el)el.classList.toggle('active',p===id);
+  });
+}
+
+function startFlow(){
+  if(S.participants.length<2){alert('Lägg till minst 2 deltagare!');return;}
+  S.flowStep='betting';S.currentRound=0;save();
+  renderSteps();goBetting(0);
+}
+
+function goBetting(ri){
+  S.currentRound=ri;S.flowStep=`betting`;save();
+  renderSteps();
+  document.getElementById('bettingRoundName').textContent=getRN(ri);
+  renderBettingPanel(ri);
+  showPanel('betting');
+}
+
+function goToScores(){
+  S.flowStep='scores';save();renderSteps();
+  renderScoresPanel(S.currentRound);
+  showPanel('scores');
+}
+
+function goFinal(){
+  S.flowStep='final';save();renderSteps();
+  renderFinalWheel();
+  showPanel('final');
+}
+
+function nextRound(){
+  const next=S.currentRound+1;
+  if(next>=S.numRounds){goFinal();return;}
+  goBetting(next);
+}
+
+// ════════════════════════════════════════════════
+//  STEP INDICATOR
+// ════════════════════════════════════════════════
+function renderSteps(){
+  const ind=document.getElementById('stepIndicator');
+  const ri=S.currentRound;
+  const fp=S.flowStep;
+
+  // Steps: Setup, then for each round: Betting+Tävling, then Final
+  let steps=[];
+  steps.push({label:'Start',icon:'⚙',key:'setup'});
+  for(let r=0;r<S.numRounds;r++){
+    steps.push({label:getRN(r),icon:r+1+'',key:`round_${r}`});
+  }
+  steps.push({label:'Final',icon:'🏆',key:'final'});
+
+  // Determine current step index
+  let cur=0;
+  if(fp==='setup') cur=0;
+  else if(fp==='final') cur=steps.length-1;
+  else cur=1+ri;
+
+  ind.innerHTML=steps.map((s,i)=>{
+    const done=i<cur;
+    const active=i===cur;
+    const lineAfter=i<steps.length-1;
+    return`<div class="step ${active?'active':done?'done':''}" onclick="stepClick(${i},${steps.length})">
+      <div class="step-circle">${done?'✓':s.icon}</div>
+      <div class="step-label">${s.label}</div>
+    </div>${lineAfter?`<div class="step-line ${done?'done':''}"></div>`:''}`;
+  }).join('');
+}
+
+function stepClick(i,total){
+  // Allow going back to setup always, and to completed rounds
+  if(i===0){showPanel('setup');S.flowStep='setup';save();renderSteps();}
+}
+
+// ════════════════════════════════════════════════
+//  BETTING PANEL — pari-mutuel
+// ════════════════════════════════════════════════
+function betKey(ri,name){return`${ri}_${name}`;}
+function getBet(ri,name){
+  const b=S.bets[betKey(ri,name)];
+  if(!b)return{picks:[{on:'',amount:BET_LIMIT},{on:'',amount:0}]};
+  // Migrate old format
+  if(b.on!==undefined)return{picks:[{on:b.on,amount:b.amount},{on:'',amount:0}]};
+  return b;
+}
+
+function renderBettingPanel(ri){
+  const active=S.participants; // All players bet every round
+  const elimSet=eliminatedBefore(ri);
+  const tbody=document.getElementById('bettingRows');
+
+  tbody.innerHTML=active.map(bettor=>{
+    const existing=getBet(ri,bettor.name);
+    const p0=existing.picks[0]||{on:'',amount:BET_LIMIT};
+    const p1=existing.picks[1]||{on:'',amount:0};
+
+    function opts(selected){
+      return '<option value="">– ingen –</option>'+
+        active.map(t=>`<option value="${t.name}" ${selected===t.name?'selected':''}>${t.name}</option>`).join('');
+    }
+    const totalBet=(p0.amount||0)+(p1.amount||0);
+    const overLimit=totalBet>BET_LIMIT;
+
+    return`<tr>
+      <td class="nc" style="min-width:80px">${avatarHTML(bettor.colorIdx,26)} ${bettor.name}</td>
+      <td colspan="2">
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <span style="font-size:.72rem;color:rgba(255,255,255,.38);min-width:36px;">Val 1:</span>
+            <select style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:9px;color:#fff;padding:5px 8px;font-family:'Nunito',sans-serif;font-size:.82rem;flex:1;min-width:90px;"
+              onchange="setBetField(${ri},'${bettor.name}',0,'on',this.value)">${opts(p0.on)}</select>
+            <input type="number" class="si" min="0" max="${BET_LIMIT}" value="${p0.amount||0}"
+              style="width:70px;" placeholder="kr"
+              oninput="setBetField(${ri},'${bettor.name}',0,'amount',this.value)"> kr
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <span style="font-size:.72rem;color:rgba(255,255,255,.38);min-width:36px;">Val 2:</span>
+            <select style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:9px;color:#fff;padding:5px 8px;font-family:'Nunito',sans-serif;font-size:.82rem;flex:1;min-width:90px;"
+              onchange="setBetField(${ri},'${bettor.name}',1,'on',this.value)">${opts(p1.on)}</select>
+            <input type="number" class="si" min="0" max="${BET_LIMIT}" value="${p1.amount||0}"
+              style="width:70px;" placeholder="kr"
+              oninput="setBetField(${ri},'${bettor.name}',1,'amount',this.value)"> kr
+          </div>
+          <div id="bet-total-${bettor.name.replace(/\s/g,'_')}" style="font-size:.72rem;color:${overLimit?'var(--red)':'rgba(255,255,255,.35)'}">
+            Totalt: ${totalBet} / ${BET_LIMIT} kr${overLimit?' ⚠ Överstiger max!':''}
+          </div>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  updateOdds(ri);
+}
+
+function setBetField(ri,bettor,pickIdx,field,value){
+  if(!S.bets[betKey(ri,bettor)])S.bets[betKey(ri,bettor)]={picks:[{on:'',amount:BET_LIMIT},{on:'',amount:0}]};
+  const b=S.bets[betKey(ri,bettor)];
+  // Migrate old format
+  if(b.on!==undefined){b.picks=[{on:b.on,amount:b.amount},{on:'',amount:0}];delete b.on;delete b.amount;}
+  if(!b.picks[pickIdx])b.picks[pickIdx]={on:'',amount:0};
+  if(field==='amount'){
+    const other=(b.picks[1-pickIdx]||{}).amount||0;
+    const maxThis=Math.max(0,BET_LIMIT-other);
+    b.picks[pickIdx].amount=Math.min(maxThis,Math.max(0,parseFloat(value)||0));
+  } else {
+    b.picks[pickIdx][field]=value;
+  }
+  save();updateOdds(ri);
+  // Update just the total label for this bettor without re-rendering
+  const bNorm=bettor.replace(/\s/g,'_');
+  const el=document.getElementById('bet-total-'+bNorm);
+  if(el){
+    const bb=S.bets[betKey(ri,bettor)];
+    const t=((bb.picks[0]||{}).amount||0)+((bb.picks[1]||{}).amount||0);
+    const over=t>BET_LIMIT;
+    el.style.color=over?'var(--red)':'rgba(255,255,255,.35)';
+    el.textContent=`Totalt: ${t} / ${BET_LIMIT} kr`+(over?' ⚠ Överstiger max!':'');
+  }
+}
+
+// Pari-mutuel odds calculation
+// Odds for X = totalPot / moneyOnX
+// (No house cut in our version — full pari-mutuel)
+function calcOdds(ri){
+  const active=S.participants; // All players can bet
+  const potByTarget={};
+  let totalPot=0;
+  active.forEach(bettor=>{
+    const b=getBet(ri,bettor.name);
+    (b.picks||[]).forEach(pick=>{
+      if(pick.on&&pick.amount>0){
+        potByTarget[pick.on]=(potByTarget[pick.on]||0)+pick.amount;
+        totalPot+=pick.amount;
+      }
+    });
+  });
+  const odds={};
+  active.forEach(p=>{
+    const moneyOn=potByTarget[p.name]||0;
+    odds[p.name]=moneyOn>0?(totalPot/moneyOn):null;
+  });
+  return{odds,potByTarget,totalPot};
+}
+
+function updateOdds(ri){
+  const {odds,potByTarget,totalPot}=calcOdds(ri);
+  const active=activePlayers(ri);
+  const maxMoney=Math.max(1,...Object.values(potByTarget));
+
+  document.getElementById('potTotal').textContent=`Total pott: ${totalPot} kr`;
+  const jpBetting=document.getElementById('jackpotInBetting');
+  if(jpBetting){const jp=S.jackpot||0;jpBetting.style.display=jp>0?'block':'none';jpBetting.textContent=jp>0?`🎰 + ${jp} kr jackpot rullar in!`:'';}
+  document.getElementById('oddsRows').innerHTML=active.map(p=>{
+    const o=odds[p.name];
+    const m=potByTarget[p.name]||0;
+    const pct=totalPot>0?Math.round(m/totalPot*100):0;
+    return`<div class="odds-row">
+      <div class="odds-name">${avatarHTML(p.colorIdx,22)} ${p.name}</div>
+      <div class="odds-bar-w"><div class="odds-bar" style="width:${pct}%;background:${color(p.colorIdx)}"></div></div>
+      <div style="font-size:.72rem;color:rgba(255,255,255,.4);min-width:34px;text-align:right">${m} kr</div>
+      <div class="odds-val">${o!==null?o.toFixed(2)+'x':'–'}</div>
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════
+//  SCORES PANEL
+// ════════════════════════════════════════════════
+function renderScoresPanel(ri){
+  document.getElementById('scoresRoundName').textContent=getRN(ri);
+  const elimSet=eliminatedBefore(ri);
+
+  // All participants can enter scores — eliminated shown with badge but still editable
+  document.getElementById('scoresRows').innerHTML=S.participants.map((p,pi)=>{
+    const isElim=elimSet.has(p.name);
+    const sc=getScore(pi,ri);
+    return`<tr>
+      <td class="nc">${avatarHTML(p.colorIdx,26)} ${p.name}${isElim?'<span class="elim-badge">utslagen</span>':''}</td>
+      <td><input type="number" class="si" min="0" value="${sc!==null?sc:''}" placeholder="–" onchange="setScoreVal(${pi},${ri},this.value)" onblur="setScoreVal(${pi},${ri},this.value)"></td>
+    </tr>`;
+  }).join('');
+  updateElimInfo();
+}
+
+function updateElimInfo(){
+  const ri=S.currentRound;
+  const activeOnWheel=activePlayers(ri); // Only non-eliminated on wheel
+  const elim=Math.max(0,parseInt(document.getElementById('elimCount').value)||0);
+  const survive=Math.max(0,activeOnWheel.length-elim);
+  document.getElementById('elimInfo').textContent=
+    `${S.participants.length} spelar · ${activeOnWheel.length} på hjulet · ${elim} åker ut · Hjulet snurras ${survive} gånger`;
+}
+
+// ════════════════════════════════════════════════
+//  SLOTS COMPUTATION (reversed: sämst = flest)
+// ════════════════════════════════════════════════
+function computeSlots(subset,rounds){
+  const TARGET=40;
+  const totals=subset.map(()=>0);
+  for(const ri of rounds){
+    const filled=subset.map((p,i)=>{
+      const pi=S.participants.findIndex(x=>x.name===p.name);
+      return{i,score:getScore(pi,ri)};
+    }).filter(x=>x.score!==null);
+    if(!filled.length)continue;
+    const mx=Math.max(...filled.map(x=>x.score));
+    const mn=Math.min(...filled.map(x=>x.score));
+    const rng=mx-mn||1;
+    filled.forEach(it=>{
+      // Inverted: lower score = worse = more slots
+      const badness=(mx-it.score)/rng;
+      totals[it.i]+=1+badness*9;
+    });
+  }
+  const grand=totals.reduce((a,b)=>a+b,0);
+  return subset.map((p,i)=>{
+    const share=grand>0?totals[i]/grand:1/subset.length;
+    return{name:p.name,color:color(p.colorIdx),share,slots:Math.max(1,Math.round(share*TARGET))};
+  });
+}
+function buildSlots(data){
+  let r=[];data.forEach(s=>{for(let i=0;i<s.slots;i++)r.push({name:s.name,color:s.color});});
+  return shuffle(r);
+}
+
+// ════════════════════════════════════════════════
+//  DRAW WHEEL
+// ════════════════════════════════════════════════
+function drawWheel(cvs,ctx,slots,angle){
+  if(!slots.length)return;
+  const sz=cvs.width,cx=sz/2,cy=sz/2,r=sz/2-7;
+  const arc=(2*Math.PI)/slots.length;
+  ctx.clearRect(0,0,sz,sz);
+  ctx.save();ctx.shadowBlur=24;ctx.shadowColor='rgba(255,209,102,.28)';ctx.strokeStyle='rgba(255,209,102,.11)';ctx.lineWidth=8;ctx.beginPath();ctx.arc(cx,cy,r+4,0,2*Math.PI);ctx.stroke();ctx.restore();
+  slots.forEach((s,i)=>{
+    const sa=angle+i*arc,ea=sa+arc,ma=sa+arc/2;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,sa,ea);ctx.closePath();ctx.fillStyle=s.color;ctx.fill();
+    ctx.strokeStyle='rgba(0,0,0,.16)';ctx.lineWidth=1.2;ctx.stroke();
+    if(i%2===0){ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,sa,ea);ctx.closePath();ctx.fillStyle='rgba(255,255,255,.07)';ctx.fill();}
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(ma);ctx.textAlign='right';
+    ctx.fillStyle='#fff';ctx.shadowColor='rgba(0,0,0,.7)';ctx.shadowBlur=4;
+    const fs=Math.min(13,Math.max(7,r*.08));ctx.font=`bold ${fs}px Nunito,sans-serif`;
+    let lbl=s.name;if(lbl.length>10)lbl=lbl.slice(0,9)+'…';
+    ctx.fillText(lbl,r-11,fs*.37);ctx.restore();
+  });
+  ctx.beginPath();ctx.arc(cx,cy,16,0,2*Math.PI);ctx.fillStyle='#1a0a2e';ctx.fill();ctx.strokeStyle='rgba(255,209,102,.85)';ctx.lineWidth=3;ctx.stroke();
+}
+
+// ════════════════════════════════════════════════
+//  SPIN ENGINE — corrected + dramatic ease + twitches
+// ════════════════════════════════════════════════
+function slotAtPointer(slots,angle){
+  const arc=(2*Math.PI)/slots.length;
+  const norm=((angle%(2*Math.PI))+2*Math.PI)%(2*Math.PI);
+  const rel=(2*Math.PI-norm)%(2*Math.PI);
+  const idx=Math.floor(rel/arc)%slots.length;
+  return{idx,slot:slots[idx]};
+}
+
+function runSpin(cvs,ctx,slots,startAngle,onTick,onDone){
+  const total=slots.length;
+  const arc=(2*Math.PI)/total;
+  const winnerIdx=Math.floor(Math.random()*total);
+
+  // Desired final angle so winnerIdx midpoint is exactly at pointer (right = 0)
+  const desiredMod=((-(winnerIdx*arc+arc/2))%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
+  const startNorm=((startAngle%(2*Math.PI))+2*Math.PI)%(2*Math.PI);
+  let extra=(desiredMod-startNorm+2*Math.PI)%(2*Math.PI);
+  if(extra<0.001)extra+=2*Math.PI;
+
+  const totalRot=(10+Math.random()*5)*2*Math.PI+extra;
+  const finalAngle=startAngle+totalRot;
+  const duration=9000+Math.random()*2000;
+
+  // Random twitches in 72-96% range
+  const twitches=[];
+  for(let i=0;i<4;i++)twitches.push({at:.72+Math.random()*.24,amp:(Math.random()*.016+.005)*(Math.random()<.5?1:-1),used:false});
+  twitches.sort((a,b)=>a.at-b.at);
+
+  function ease(t){return 1-Math.pow(1-t,8);}
+  let twOff=0;
+  const t0=performance.now();
+
+  function frame(now){
+    const t=Math.min((now-t0)/duration,1);
+    twitches.forEach(tw=>{if(!tw.used&&t>=tw.at){tw.used=true;twOff+=tw.amp;}});
+    const a=startAngle+totalRot*ease(t)+twOff;
+    onTick(a);drawWheel(cvs,ctx,slots,a);
+    if(t<1){requestAnimationFrame(frame);}
+    else{
+      drawWheel(cvs,ctx,slots,finalAngle);
+      const confirmed=slotAtPointer(slots,finalAngle);
+      onDone(finalAngle,confirmed.slot,confirmed.idx);
+    }
+  }
+  requestAnimationFrame(frame);
+}
+
+// ════════════════════════════════════════════════
+//  WHEEL MODAL
+// ════════════════════════════════════════════════
+let mState={ri:0,slots:[],angle:0,spinning:false,remaining:[],saved:[],eliminated:[],spinsLeft:0,totalSpins:0};
+
+function openWheelModal(){
+  const ri=S.currentRound;
+  const elim=Math.max(0,parseInt(document.getElementById('elimCount').value)||0);
+  const active=activePlayers(ri);
+  const survive=Math.max(0,active.length-elim);
+
+  const sd=computeSlots(active.map(p=>({...p})),[ri]);
+  const slots=buildSlots(sd);
+
+  mState={ri,slots,angle:Math.random()*2*Math.PI,spinning:false,
+    remaining:[...active],saved:[],eliminated:[],spinsLeft:survive,totalSpins:survive};
+
+  document.getElementById('mTitle').textContent=`🎡 Hjul – ${getRN(ri)}`;
+  document.getElementById('mSub').textContent=survive>0?`Snurr 1 av ${survive} — vem räddas?`:'Alla åker ut!';
+  document.getElementById('mWinner').textContent='';
+  document.getElementById('mSavedWrap').style.display='none';
+  document.getElementById('mOutWrap').style.display='none';
+  document.getElementById('mSpinBtn').style.display=survive>0?'inline-flex':'none';
+  document.getElementById('mNextBtn').style.display='none';
+  document.getElementById('mDoneBtn').style.display=survive===0?'inline-flex':'none';
+  document.getElementById('mLegend').innerHTML='';
+
+  const cvs=document.getElementById('wheelCanvas');
+  drawWheel(cvs,cvs.getContext('2d'),mState.slots,mState.angle);
+  updateModalLegend();
+  document.getElementById('wheelModal').classList.add('open');
+}
+
+function updateModalLegend(){
+  const seen={};const u=[];
+  mState.slots.forEach(s=>{if(!seen[s.name]){seen[s.name]=s.color;u.push(s);}});
+  document.getElementById('mLegend').innerHTML=u.map(s=>`<div class="li"><div class="ld" style="background:${s.color}"></div>${s.name}</div>`).join('');
+}
+
+function spinModal(){
+  if(mState.spinning||mState.spinsLeft<=0)return;
+  mState.spinning=true;
+  document.getElementById('mSpinBtn').style.display='none';
+  document.getElementById('mNextBtn').style.display='none';
+  document.getElementById('mWinner').textContent='…';
+
+  const cvs=document.getElementById('wheelCanvas');
+  runSpin(cvs,cvs.getContext('2d'),mState.slots,mState.angle,
+    a=>{mState.angle=a;},
+    (fa,winner)=>{
+      mState.angle=fa;mState.spinning=false;
+      mState.saved.push(winner);
+      mState.remaining=mState.remaining.filter(p=>p.name!==winner.name);
+      mState.spinsLeft--;
+
+      document.getElementById('mWinner').textContent=`🎉 ${winner.name} är räddad!`;
+      launchConfetti(winner.color);
+      document.getElementById('mSavedWrap').style.display='block';
+      document.getElementById('mSaved').innerHTML=mState.saved.map(p=>`<span class="ptag safe">✅ ${p.name}</span>`).join('');
+
+      if(mState.spinsLeft>0){
+        const newSD=computeSlots(mState.remaining.map(p=>({...p})),[mState.ri]);
+        mState.slots=buildSlots(newSD);
+        const cvs2=document.getElementById('wheelCanvas');
+        drawWheel(cvs2,cvs2.getContext('2d'),mState.slots,mState.angle);
+        updateModalLegend();
+        document.getElementById('mSub').textContent=`Snurr ${mState.totalSpins-mState.spinsLeft+1} av ${mState.totalSpins} — vem räddas härnäst?`;
+        document.getElementById('mNextBtn').style.display='inline-flex';
+        document.getElementById('mNextBtn').textContent=`🎉 Snurra igen! (${mState.spinsLeft} kvar)`;
+      } else {
+        mState.eliminated=mState.remaining;
+        document.getElementById('mSub').textContent=`Klart! ${mState.saved.length} räddade · ${mState.eliminated.length} utslagna`;
+        if(mState.eliminated.length){
+          document.getElementById('mOutWrap').style.display='block';
+          document.getElementById('mOut').innerHTML=mState.eliminated.map(p=>`<span class="ptag out">💀 ${p.name}</span>`).join('');
+        }
+        document.getElementById('mDoneBtn').style.display='inline-flex';
+        document.getElementById('mLegend').innerHTML='';
+      }
+    }
+  );
+}
+
+function nextModalSpin(){
+  document.getElementById('mNextBtn').style.display='none';
+  document.getElementById('mWinner').textContent='';
+  document.getElementById('mSpinBtn').style.display='inline-flex';
+}
+
+function finishRoundAndClose(){
+  const ri=mState.ri;
+  S.roundElim[ri]=mState.eliminated.map(p=>p.name);
+  save();
+  closeWheelModal();
+  settleBets(ri);
+}
+
+function closeWheelModal(){
+  document.getElementById('wheelModal').classList.remove('open');
+}
+
+// ════════════════════════════════════════════════
+//  BET SETTLEMENT — pari-mutuel
+// ════════════════════════════════════════════════
+function settleBets(ri, activeSnapshot){
+  // All participants are included in betting each round
+  const active=S.participants;
+  let roundWinner=null;
+  let bestScore=-Infinity;
+  active.forEach(p=>{
+    const pi=S.participants.findIndex(x=>x.name===p.name);
+    const sc=getScore(pi,ri);
+    if(sc!==null&&sc>bestScore){bestScore=sc;roundWinner=p.name;}
+  });
+
+  // Gather bets (each bettor can have 2 picks)
+  const potByTarget={};let totalPot=0;
+  active.forEach(bettor=>{
+    const b=getBet(ri,bettor.name);
+    (b.picks||[]).forEach(pick=>{
+      if(pick.on&&pick.amount>0){
+        potByTarget[pick.on]=(potByTarget[pick.on]||0)+pick.amount;
+        totalPot+=pick.amount;
+      }
+    });
+  });
+
+  // Settle: net gain/loss per person added to running saldo
+  // Winners get back their bet + share of losers' pot
+  // Losers lose their bet
+  const payouts={};   // bettor name -> total net change
+  const winnerPool=potByTarget[roundWinner]||0;
+  const jackpotThisRound=S.jackpot||0;
+  const effectivePot=totalPot+jackpotThisRound; // Include accumulated jackpot
+  if(roundWinner&&winnerPool>0&&totalPot>0){
+    if(jackpotThisRound>0)S.jackpot=0; // Reset jackpot — it's being paid out
+    active.forEach(bettor=>{
+      const b=getBet(ri,bettor.name);
+      const pi=S.participants.findIndex(x=>x.name===bettor.name);
+      let netChange=0;
+      (b.picks||[]).forEach(pick=>{
+        if(!pick.on||!pick.amount)return;
+        if(pick.on===roundWinner){
+          // Winning pick: pari-mutuel share of total pot (incl. jackpot)
+          const share=pick.amount/winnerPool;
+          const payout=Math.round(share*effectivePot*100)/100;
+          netChange+=Math.round((payout-pick.amount)*100)/100; // profit
+        } else {
+          // Losing pick: lose the stake
+          netChange-=pick.amount;
+        }
+      });
+      payouts[bettor.name]=netChange;
+      S.participants[pi].capital=Math.round(((S.participants[pi].capital||0)+netChange)*100)/100;
+    });
+  } else {
+    // No one picked the winner — pot becomes jackpot, everyone loses stake
+    active.forEach(bettor=>{
+      const b=getBet(ri,bettor.name);
+      const pi=S.participants.findIndex(x=>x.name===bettor.name);
+      let lost=0;
+      (b.picks||[]).forEach(pick=>{if(pick.amount>0)lost+=pick.amount;});
+      payouts[bettor.name]=-lost;
+      S.participants[pi].capital=Math.round(((S.participants[pi].capital||0)-lost)*100)/100;
+    });
+    // Roll pot into jackpot
+    S.jackpot=Math.round(((S.jackpot||0)+totalPot)*100)/100;
+  }
+
+  S.betResults[ri]={winner:roundWinner,payouts,totalPot,effectivePot,jackpotAdded:jackpotThisRound,potByTarget,activeNames:active.map(p=>p.name)};
+  save();
+  showBetResults(ri);
+}
+
+function showBetResults(ri){
+  const res=S.betResults[ri];
+  const active=S.participants; // All players in betting results
+  S.flowStep='betresults';save();renderSteps();
+
+  document.getElementById('betResRoundName').textContent=getRN(ri);
+  const jackpotNow=S.jackpot||0;
+  const jackpotWasAdded=res.jackpotAdded||0;
+  let descText='';
+  if(res.winner){
+    descText=`Vinnare: ${res.winner} (högst poäng). Pott: ${res.totalPot} kr`;
+    if(jackpotWasAdded>0)descText+=` + 🎰 ${jackpotWasAdded} kr jackpot`;
+    descText+='.';
+  } else {
+    descText='Ingen träffade vinnaren.';
+  }
+  if(jackpotNow>0)descText+=` 🎰 Jackpot rullar vidare: ${jackpotNow} kr!`;
+  document.getElementById('betResDesc').textContent=descText;
+
+  // Bet results table
+  const rows=active.map(p=>{
+    const b=getBet(ri,p.name);
+    const net=res.payouts[p.name]||0;
+    const picks=(b.picks||[]).filter(pk=>pk.on&&pk.amount>0);
+    const betsDesc=picks.length?picks.map(pk=>`${pk.amount} kr på ${pk.on}`).join(' + '):'-';
+    const isWin=net>0;
+    return`<div class="bet-result-row${isWin?' win-row':''}">
+      <div class="br-name">${avatarHTML(p.colorIdx,22)} ${p.name}</div>
+      <div class="br-bet" style="font-size:.76rem">${betsDesc}</div>
+      <div class="br-profit" style="color:${net>0?'var(--green)':net<0?'var(--red)':'rgba(255,255,255,.4)'};font-weight:900;font-size:1rem">${net>0?'+'+net:net} kr</div>
+    </div>`;
+  }).join('');
+  document.getElementById('betResTable').innerHTML=`
+    <div style="display:flex;gap:0;padding:5px 8px;font-size:.7rem;color:rgba(255,255,255,.32);font-weight:700;text-transform:uppercase;letter-spacing:.4px;">
+      <div style="flex:1">Spelare</div><div style="min-width:140px;text-align:right">Insatser</div>
+      <div style="min-width:80px;text-align:right">Netto</div>
+    </div>${rows}`;
+
+  // Balance table
+  // Show jackpot banner if there is one
+  const jpEl=document.getElementById('jackpotBanner');
+  if(jpEl){
+    const jp=S.jackpot||0;
+    jpEl.style.display=jp>0?'block':'none';
+    jpEl.innerHTML=jp>0?`<div style="font-family:'Boogaloo',cursive;font-size:1.4rem;color:var(--yellow);text-align:center;padding:10px;background:rgba(255,209,102,.1);border-radius:12px;border:1px solid rgba(255,209,102,.25);margin-bottom:10px;">🎰 Jackpot: ${jp} kr rullar till nästa deltävling!</div>`:'';
+  }
+  document.getElementById('balanceRows').innerHTML=
+    [...S.participants].sort((a,b)=>(b.capital||0)-(a.capital||0)).map(p=>{
+      const elim=allElimNames().has(p.name);
+      return`<div class="odds-row">
+        <div class="odds-name" style="${elim?'opacity:.4':''}">${avatarHTML(p.colorIdx,22)} ${p.name}${elim?'<span class="elim-badge">ute</span>':''}</div>
+        <div style="font-family:'Boogaloo',cursive;font-size:1.2rem;color:var(--yellow)">${p.capital||0} kr</div>
+      </div>`;
+    }).join('');
+
+  const isLast=ri>=S.numRounds-1;
+  document.getElementById('nextRoundBtn').style.display=isLast?'none':'inline-flex';
+  document.getElementById('goFinalBtn').style.display=isLast?'inline-flex':'none';
+
+  showPanel('betresults');
+}
+
+// ════════════════════════════════════════════════
+//  FINAL WHEEL
+// ════════════════════════════════════════════════
+let fwSlots=[],fwAngle=0,fwSpinning=false;
+
+function renderFinalWheel(){
+  const elim=allElimNames();
+  const active=S.participants.filter(p=>!elim.has(p.name));
+  if(!active.length){document.getElementById('fwWinner').textContent='Inga aktiva spelare!';return;}
+
+  const allRounds=Array.from({length:S.numRounds},(_,ri)=>ri);
+  const sd=computeSlots(active.map(p=>({...p})),allRounds);
+  fwSlots=buildSlots(sd);fwAngle=0;
+
+  const cvs=document.getElementById('fwCanvas');
+  drawWheel(cvs,cvs.getContext('2d'),fwSlots,fwAngle);
+
+  const sorted=[...sd].sort((a,b)=>b.slots-a.slots);
+  document.getElementById('fwLegend').innerHTML=sorted.map(s=>`<div class="li"><div class="ld" style="background:${s.color}"></div>${s.name} — ${s.slots} seg (${Math.round(s.share*100)}%)</div>`).join('');
+  document.getElementById('fwWinner').textContent='';
+}
+
+function spinFinal(){
+  if(fwSpinning||!fwSlots.length)return;
+  fwSpinning=true;
+  document.getElementById('fwSpinBtn').disabled=true;
+  document.getElementById('fwWinner').textContent='…';
+  const cvs=document.getElementById('fwCanvas');
+  runSpin(cvs,cvs.getContext('2d'),fwSlots,fwAngle,
+    a=>{fwAngle=a;},
+    (fa,winner)=>{
+      fwAngle=fa;fwSpinning=false;
+      document.getElementById('fwSpinBtn').disabled=false;
+      document.getElementById('fwWinner').textContent=`🎉 ${winner.name} vinner finalen!`;
+      launchConfetti(winner.color);
+    }
+  );
+}
+
+// ════════════════════════════════════════════════
+//  CONFETTI
+// ════════════════════════════════════════════════
+function launchConfetti(mc){
+  const c=document.getElementById('confetti');c.innerHTML='';
+  const cols=[mc,'#ffd166','#06d6a0','#fff','#ef476f'];
+  for(let i=0;i<130;i++){
+    const p=document.createElement('div');p.className='cp';
+    const sz=6+Math.random()*13;
+    p.style.cssText=`left:${Math.random()*100}%;width:${sz}px;height:${sz}px;background:${cols[Math.floor(Math.random()*cols.length)]};border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${2.5+Math.random()*2.5}s;animation-delay:${Math.random()*.5}s;`;
+    c.appendChild(p);
+  }
+  setTimeout(()=>{c.innerHTML='';},6500);
+}
+
+// ════════════════════════════════════════════════
+//  RENDER ALL + BOOT
+// ════════════════════════════════════════════════
+function renderAll(){
+  document.getElementById('numRounds').value=S.numRounds;
+  renderSetup();renderRoundNames();renderSteps();
+
+  // Restore correct panel
+  const fp=S.flowStep;
+  if(!fp||fp==='setup'){showPanel('setup');renderSteps();}
+  else if(fp==='betting'){showPanel('setup');} // let user re-navigate
+  else if(fp==='scores'){showPanel('setup');}
+  else if(fp==='betresults'){
+    if(S.betResults[S.currentRound])showBetResults(S.currentRound);
+    else showPanel('setup');
+  }
+  else if(fp==='final'){renderFinalWheel();showPanel('final');}
+  else showPanel('setup');
+}
+
+load();
+if(!S.participants.length){
+  ['Anna','Björn','Cecilia','David','Emma'].forEach((n,i)=>S.participants.push({name:n,colorIdx:i,capital:DEFAULT_CAPITAL}));
+}
+document.getElementById('numRounds').value=S.numRounds;
+renderSetup();renderRoundNames();renderSteps();
+showPanel('setup');
+document.getElementById('elimCount')?.addEventListener('input',updateElimInfo);
+</script>
+</body>
+</html>
